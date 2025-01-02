@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Heart Disease Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('/static/images/heart.jpg') no-repeat center center fixed;
+            background-size: cover;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent white */
+            border-radius: 10px;
+            box-shadow: 0px 10px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 16px;
+            margin-bottom: 8px;
+            color: #333;
+        }
+
+        input[type="number"] {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 20px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #007bff;
+            color: white;
+            font-size: 18px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-top: 20px;
+        }
+
+        .error {
+            color: red;
+            font-size: 18px;
+        }
+
+        .description {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        footer {
+            text-align: center;
+            font-size: 14px;
+            color: white;
+            margin-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Heart Disease Prediction</h1>
+        <form method="POST" action="/predict">
+            
+            <label for="age">Age:</label>
+            <input type="number" id="age" name="age" required>
+            <div class="description">Enter your age in years. For example: 45.</div>
+
+            
+            <label for="sex">Sex (0 for Female, 1 for Male):</label>
+            <input type="number" id="sex" name="sex" required>
+            <div class="description">Select 0 if Female, 1 if Male.</div>
+
+            
+            <label for="cp">Chest Pain Type (1, 2, 3, 4):</label>
+            <input type="number" id="cp" name="cp" required>
+            <div class="description">Enter the type of chest pain: 1 (typical angina), 2 (atypical angina), 3 (non-anginal pain), 4 (asymptomatic).</div>
+
+            
+            <label for="trestbps">Resting Blood Pressure (100 - 200):</label>
+            <input type="number" id="trestbps" name="trestbps" required>
+            <div class="description">Enter your resting blood pressure within the range of 100 to 200 mmHg.</div>
+
+            
+            <label for="chol">Cholesterol (100 - 700):</label>
+            <input type="number" id="chol" name="chol" required>
+            <div class="description">Cholesterol levels in mg/dl. The normal range is between 100 and 700.</div>
+
+            
+            <label for="fbs">Fasting Blood Sugar > 120 mg/dl (0 for No, 1 for Yes):</label>
+            <input type="number" id="fbs" name="fbs" required>
+            <div class="description">Enter 1 if your fasting blood sugar level is greater than 120 mg/dl, otherwise enter 0.</div>
+
+            
+            <label for="restecg">Resting Electrocardiographic Results (0, 1, 2):</label>
+            <input type="number" id="restecg" name="restecg" required>
+            <div class="description">Enter the result of your resting electrocardiographic test: 0 (normal), 1 (having ST-T wave abnormality), 2 (showing probable or definite left ventricular hypertrophy).</div>
+
+            
+            <label for="thalach">Maximum Heart Rate Achieved (100-250):</label>
+            <input type="number" id="thalach" name="thalach" required>
+            <div class="description">Enter your maximum heart rate during exercise (between 100 and 250 bpm).</div>
+
+            
+            <label for="exang">Exercise Induced Angina (0 for No, 1 for Yes):</label>
+            <input type="number" id="exang" name="exang" required>
+            <div class="description">Enter 1 if you experience angina during exercise, otherwise enter 0.</div>
+
+            
+            <label for="oldpeak">ST Depression Induced by Exercise (0-5.5):</label>
+            <input type="number" id="oldpeak" name="oldpeak" required step="0.1">
+            <div class="description">Enter the ST depression value (from 0 to 5.5) caused by exercise.</div>
+
+            
+            <label for="slope">Slope of Peak Exercise ST Segment (1, 2):</label>
+            <input type="number" id="slope" name="slope" required>
+            <div class="description">Enter the slope of your ST segment during peak exercise: 1 (upsloping), 2 (flat), or 3 (downsloping).</div>
+
+            
+            <label for="ca">Number of Major Vessels (0, 1, 2, 3):</label>
+            <input type="number" id="ca" name="ca" required>
+            <div class="description">Enter the number of major vessels colored by fluoroscopy (0-3).</div>
+
+            
+            <label for="thal">Thalassemia (3, 6, 7):</label>
+            <input type="number" id="thal" name="thal" required>
+            <div class="description">Enter the thalassemia type: 3 (normal), 6 (fixed defect), or 7 (reversible defect).</div>
+
+            <button type="submit">Predict</button>
+        </form>
+
+        {% if result %}
+            <h2>{{ result }}</h2>
+        {% endif %}
+        
+        {% if error %}
+            <div class="error">
+                <h2>{{ error }}</h2>
+            </div>
+        {% endif %}
+    </div>
+    
+    <footer>
+        <p>Created by Aswin Kumar for Heart Disease Prediction Project &copy; 2025</p>
+    </footer>
+</body>
+</html>
